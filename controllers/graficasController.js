@@ -232,6 +232,11 @@ exports.numMedioInfraccionesPorDispositivoEscenarioYUsuario = async (req, res) =
             }
             
         } 
+        for(let i= 0 ; i < datos.usuario.length  ; i++){
+            const usuAux = await Usuario.findById(datos.usuario[i]);
+            datos.usuario[i] = usuAux.nombre
+        }
+        console.log("entra")
         res.json({datos});
     } catch (error) {
         console.log(error);
@@ -422,6 +427,75 @@ exports.obtenerTiempoMedioPorEscenario = async ( req, res) => {
        
        console.log(pruebas)
         res.json(pruebas)
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Hubo un error');
+    }
+}
+
+exports.numMedioTodasInfraccionesGrupoPorDispositivoEscenario = async (req, res) => {
+    try {
+        const { escenario, dispositivo, nombre, edadInicio, edadFin, aniosCarnetConducirInicio, 
+            aniosCarnetConducirFin, jugadorVideojuegos, experienciaVideojuegosInicio, experienciaVideojuegosFin, 
+            experienciaRealidadVirtualInicio, experienciaRealidadVirtualFin} = req.query;
+        const pruebas = await Prueba.aggregate([
+            {$group: {
+                _id:{
+                    escenario : "$escenario",
+                    dispositivo: "$dispositivo"
+                },
+                num_infracciones:{$push:'$infracciones'},
+                num_pruebas:{$sum:1},
+                id_usuario:{$push:'$id_usuario'}
+            }}
+        ]);
+        //console.log(experienciaVideojuegosInicio + " " +experienciaVideojuegosFin)
+        const usuarios = await Usuario.find({ 
+            jugadorVideojuegos : jugadorVideojuegos,
+            edad : { $gte: edadInicio, $lte: edadFin},
+            aniosCarnetConducir : { $gte: aniosCarnetConducirInicio, $lte: aniosCarnetConducirFin},
+            experienciaRealidadVirtual : { $gte: experienciaRealidadVirtualInicio, $lte: experienciaRealidadVirtualFin},
+            experienciaVideojuegos : { $gte: experienciaVideojuegosInicio, $lte: experienciaVideojuegosFin}
+        
+        })
+        //console.log(pruebas)
+        //console.log(usuarios) 
+        var datos ={usuario:[], mediaInfracciones:[]} 
+        var numpruebas = 0;
+        var infracciones = 0;
+        for (let i = 0; i < pruebas.length; i++) {
+            for(let k = 0; k<usuarios.length; k++){
+                if(pruebas[i]._id.escenario === escenario && pruebas[i]._id.dispositivo === dispositivo ){
+                    for(let w = 0; w < pruebas[i].id_usuario.length; w++){
+                        //console.log(usuarios[k]._id + " eing " + pruebas[i].id_usuario[w] + " pintaa")
+                        if(pruebas[i].id_usuario[w] == usuarios[k]._id){
+                            //console.log("entra")
+                            let numInfracciones = 0
+                            numpruebas++;
+                            /* for(let j = 0; j < pruebas[i].num_infracciones.length; j++){ */
+                                for(let k = 0; k < pruebas[i].num_infracciones[w].length ; k++){
+                                    
+                                        numInfracciones++
+                                        infracciones++;
+                                    
+                                }
+                            /* } */
+                            let mediaInfraccionesPrueba = 0
+                            if(numInfracciones !== 0){
+                                mediaInfraccionesPrueba = numInfracciones / pruebas[i].num_pruebas
+                            }
+                            datos.usuario = [...datos.usuario, pruebas[i].id_usuario]
+                            datos.mediaInfracciones = [...datos.mediaInfracciones, mediaInfraccionesPrueba];
+                        }
+                    }
+                }
+            }
+            
+        } 
+
+        const porcentaje = [] 
+        porcentaje[0] = (infracciones / numpruebas)
+        res.json(porcentaje);
     } catch (error) {
         console.log(error);
         res.status(500).send('Hubo un error');

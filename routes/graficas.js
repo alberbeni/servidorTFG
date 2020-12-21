@@ -48,6 +48,10 @@ router.get('/numMedioInfraccionesGrupoPorDispositivoEscenario',
     graficasController.numMedioInfraccionesGrupoPorDispositivoEscenario
 )
 
+router.get('/numMedioTodasInfraccionesGrupoPorDispositivoEscenario',
+    graficasController.numMedioTodasInfraccionesGrupoPorDispositivoEscenario
+)
+
 router.get('/numMedioInfraccionesPorDispositivoEscenarioYUsuario',
     graficasController.numMedioInfraccionesPorDispositivoEscenarioYUsuario
 )

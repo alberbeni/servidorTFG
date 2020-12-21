@@ -33,4 +33,9 @@ router.delete('/:id',
     usuarioController.deleteUsuario
 );
 
+router.post('/editarUsuario',
+    //Edición del usuario
+    usuarioController.editarUsuario
+)
+
 module.exports = router;

@@ -82,3 +82,31 @@ exports.getUsuario = async ( req, res ) => {
         res.status(500).send('Hubo un error');
     }
 }
+
+exports.editarUsuario = async ( req, res ) => {
+    try {
+        console.log(req.body)
+        let usuarioBBDD = await Usuario.findById(req.body.id)
+
+        if(!usuarioBBDD){
+            return res.status(404).json({msg : 'Fallo en la edición de un usuario'})
+        }
+
+        const usuario = {}
+        usuario.nombre = req.body.nombre
+        usuario.contrasena = usuarioBBDD.contrasena
+        usuario.email = usuarioBBDD.email
+        usuario.edad = usuarioBBDD.edad
+        usuario.aniosCarnetConducir = req.body.aniosCarnetConducir
+        usuario.jugadorVideojuegos = req.body.jugadorVideojuegos
+        usuario.experienciaVideojuegos = req.body.experienciaVideojuegos
+        usuario.experienciaRealidadVirtual = req.body.experienciaRealidadVirtual
+        usuario.tipoUsuario = req.body.tipoUsuario
+
+        nuevoUsuario = await Usuario.findByIdAndUpdate({_id: req.body.id}, usuario)
+        res.json({nuevoUsuario})
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Hubo un error');
+    }
+}
