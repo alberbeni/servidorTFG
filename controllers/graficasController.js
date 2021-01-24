@@ -212,6 +212,7 @@ exports.numMedioInfraccionesPorDispositivoEscenarioYUsuario = async (req, res) =
             }}
         ]);
         var datos ={usuario:[], mediaInfracciones:[]} 
+        datos.usuario[0] = usuario;
         for (let i = 0; i < pruebas.length; i++) {
             if(pruebas[i]._id.escenario === escenario && pruebas[i]._id.dispositivo === dispositivo
                 && pruebas[i]._id.id_usuario === usuario){
