@@ -38,4 +38,8 @@ router.get('/promedioFig65PorUsuarioEscenarioYDispositivo',
     estadisticasUsuarioController.getPromedioFig65PorUsuarioEscenarioYDispositivo
 )
 
+router.get('/listarTodasInfracciones',
+    estadisticasUsuarioController.getlistarTodasInfracciones
+)
+
 module.exports = router;

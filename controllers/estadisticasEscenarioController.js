@@ -99,7 +99,7 @@ exports.getPorcentajeInfracciones = async (req, res) => {
             }  
         }
         for(let k = 0 ; k< datos.id_infraccion.length; k++){
-            datos.porcentaje[k] = (datos.porcentaje[k]/z)*100
+            datos.porcentaje[k] = ((datos.porcentaje[k]/z)*100).toFixed(2)
         }
         //console.log(datos)
         res.json({datos})
@@ -318,7 +318,7 @@ exports.getPorcentajeInfraccionesPC = async (req, res) => {
             }  
         }
         for(let k = 0 ; k< datos.id_infraccion.length; k++){
-            datos.porcentaje[k] = (datos.porcentaje[k]/z)*100
+            datos.porcentaje[k] = ((datos.porcentaje[k]/z)*100).toFixed(2)
         }
         //console.log(datos)
         res.json({datos})
@@ -367,7 +367,7 @@ exports.getPorcentajeInfraccionesOculus = async (req, res) => {
             }  
         }
         for(let k = 0 ; k< datos.id_infraccion.length; k++){
-            datos.porcentaje[k] = (datos.porcentaje[k]/z)*100
+            datos.porcentaje[k] = ((datos.porcentaje[k]/z)*100).toFixed(2)
         }
         //console.log(datos)
         res.json({datos})
@@ -416,7 +416,7 @@ exports.getPorcentajeInfraccionesVR = async (req, res) => {
             }  
         }
         for(let k = 0 ; k< datos.id_infraccion.length; k++){
-            datos.porcentaje[k] = (datos.porcentaje[k]/z)*100
+            datos.porcentaje[k] = ((datos.porcentaje[k]/z)*100).toFixed(2)
         }
         //console.log(datos)
         res.json({datos})

@@ -461,3 +461,60 @@ exports.getPromedioFig65PorUsuarioEscenarioYDispositivo = async (req, res) => {
         res.status(500).send('Hubo un error');
     }
 }
+
+exports.getlistarTodasInfracciones = async (req, res) => {
+    try {
+        const { escenario, dispositivo, usuario } = req.query;
+        var datos ={infraccion:[], numero:[], infraccionNombre:[]}
+        var respuesta = {infraccion:[], numero:[]}
+        const infracciones = await Infraccion.find();
+        
+        for(let i = 0; i < infracciones.length; i++){
+            datos.infraccion[i] = infracciones[i].id_infraccion
+            datos.numero[i] = 0
+            datos.infraccionNombre[i] = infracciones[i].nombre
+        }
+        const pruebas = await Prueba.aggregate([
+            {
+                $match : { id_usuario: usuario}
+            },
+            {$group: {
+                _id:{
+                    id_usuario : "$id_usuario",
+                    escenario : "$escenario",
+                    dispositivo: "$dispositivo",
+                    infracciones: "$infracciones"
+                },                
+            }},
+            
+        ]);
+
+        let numPruebas = 0
+        let numInfracciones = 0
+        for(let i = 0 ; i< pruebas.length; i++){
+            if(pruebas[i]._id.escenario === escenario && pruebas[i]._id.dispositivo === dispositivo
+                && pruebas[i]._id.id_usuario === usuario){
+                    numPruebas ++
+                    //console.log(pruebas[i]._id.infracciones)
+                for(let k = 0; k < pruebas[i]._id.infracciones.length; k++){
+                    for(let j = 0; j < datos.infraccion.length; j++){
+                        if(datos.infraccion[j] == pruebas[i]._id.infracciones[k].id_infraccion){
+                            numInfracciones = numInfracciones + 1;
+                        }
+                    }
+
+                }
+            }
+        }
+        console.log(numInfracciones)
+        for(let j = 0; j < datos.infraccion.length; j++){
+                datos.numero[j] = datos.numero[j] / numPruebas;
+        }
+        respuesta.infraccion[0] = "Numero todas las infracciones cometidas"
+        respuesta.numero[0] = numInfracciones
+        res.json({respuesta})
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Hubo un error');
+    }
+}
