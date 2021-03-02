@@ -199,7 +199,7 @@ exports.numMedioInfraccionesPorDispositivoEscenario = async (req, res) => {
 
 exports.numMedioInfraccionesPorDispositivoEscenarioYUsuario = async (req, res) => {
     try {
-        const { escenario, dispositivo, infraccion, usuario } = req.query;
+        const { escenario, dispositivo, infraccion, usuario, num } = req.query;
         const pruebas = await Prueba.aggregate([
             {$group: {
                 _id:{
@@ -213,6 +213,7 @@ exports.numMedioInfraccionesPorDispositivoEscenarioYUsuario = async (req, res) =
         ]);
         var datos ={usuario:[], mediaInfracciones:[]} 
         datos.usuario[0] = usuario;
+        console.log(datos)
         for (let i = 0; i < pruebas.length; i++) {
             if(pruebas[i]._id.escenario === escenario && pruebas[i]._id.dispositivo === dispositivo
                 && pruebas[i]._id.id_usuario === usuario){
@@ -228,16 +229,19 @@ exports.numMedioInfraccionesPorDispositivoEscenarioYUsuario = async (req, res) =
                 if(numInfracciones !== 0){
                     mediaInfraccionesPrueba = numInfracciones / pruebas[i].num_pruebas
                 }
-                datos.usuario = [...datos.usuario, pruebas[i]._id.id_usuario]
-                datos.mediaInfracciones = [...datos.mediaInfracciones, mediaInfraccionesPrueba];
+                console.log("entra")
+                let media = 0;
+                media = (datos.mediaInfracciones + mediaInfraccionesPrueba) / 2
+                datos.mediaInfracciones = [media];
             }
             
-        } 
+        }        
         for(let i= 0 ; i < datos.usuario.length  ; i++){
             const usuAux = await Usuario.findById(datos.usuario[i]);
             datos.usuario[i] = usuAux.nombre
+            datos.usuario[i] = num
         }
-        console.log("entra")
+        console.log(usuario)
         res.json({datos});
     } catch (error) {
         console.log(error);

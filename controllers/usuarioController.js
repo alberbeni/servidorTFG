@@ -55,7 +55,12 @@ exports.crearUsuario = async ( req, res) => {
 
 exports.getUsuarios = async ( req, res) => {
     try {
-        const usuarios = await Usuario.find().select('-contrasena');
+        let usuarios = await Usuario.find().select('-contrasena');
+        for(let i = 0; i<usuarios.length; i++){
+            usuarios[i].num = i   
+            //console.log(usuarios[i].num) 
+        }
+        console.log(usuarios[0])
         res.json({ usuarios })
     } catch (error) {
         console.log(error);

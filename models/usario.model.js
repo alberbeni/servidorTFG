@@ -12,6 +12,7 @@ const usuarioSchema = new Schema({
     experienciaVideojuegos: { type: Number, required: true },
     experienciaRealidadVirtual: { type: Number, required: true },
     isAdmin: {type: Boolean}, 
+    num: {type: String},
     tipoUsuario: {type: String, required: true}
 }, {
     timestamps: true,
