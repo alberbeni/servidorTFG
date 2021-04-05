@@ -213,11 +213,13 @@ exports.numMedioInfraccionesPorDispositivoEscenarioYUsuario = async (req, res) =
         ]);
         var datos ={usuario:[], mediaInfracciones:[]} 
         datos.usuario[0] = usuario;
-        console.log(datos)
+        console.log(usuario)
         for (let i = 0; i < pruebas.length; i++) {
+            /* console.log(pruebas[i]._id.id_usuario); */
             if(pruebas[i]._id.escenario === escenario && pruebas[i]._id.dispositivo === dispositivo
                 && pruebas[i]._id.id_usuario === usuario){
                 let numInfracciones = 0
+                console.log("dos")
                 for(let j = 0; j < pruebas[i].num_infracciones.length; j++){
                     for(let k = 0; k < pruebas[i].num_infracciones[j].length ; k++){
                         if(pruebas[i].num_infracciones[j][k].id_infraccion == infraccion){
