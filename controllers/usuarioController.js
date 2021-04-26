@@ -101,7 +101,7 @@ exports.editarUsuario = async ( req, res ) => {
         usuario.nombre = req.body.nombre
         usuario.contrasena = usuarioBBDD.contrasena
         usuario.email = usuarioBBDD.email
-        usuario.edad = usuarioBBDD.edad
+        usuario.edad = req.body.edad
         usuario.aniosCarnetConducir = req.body.aniosCarnetConducir
         usuario.jugadorVideojuegos = req.body.jugadorVideojuegos
         usuario.experienciaVideojuegos = req.body.experienciaVideojuegos
